@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/login/login_bloc.dart';
 import 'package:youapp/model/authrequest_model.dart';
@@ -10,6 +11,8 @@ import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/validator.dart';
+import 'package:youapp/util/youapp_dynamic_textfield.dart';
+import 'package:youapp/util/youapp_text_style.dart';
 import 'package:youapp/widgets/background.dart';
 import 'package:youapp/widgets/ptb_go_button.dart';
 
@@ -81,31 +84,23 @@ class LoginWidgetState extends State<LoginWidget> {
     );
   }
 
-  Widget _getLogo() {
-    return Image.asset(
-      'assets/images/ptbgo_black_logo.png',
-      height: 40,
-    );
-  }
-
   Widget _getForm() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       switch (state.addStatus) {
         case Status.loading:
-          const Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
 
-          break;
-
         case Status.success:
           loginResponse = state.response;
-
           break;
+
         case Status.failed:
-          const Center(
+          return const Center(
             child: Text('Failed'),
           );
+
         default:
       }
 
@@ -119,65 +114,45 @@ class LoginWidgetState extends State<LoginWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 16),
-              const Text(
-                'Login',
-                style: TextStyle(
-                  color: YouAppColor.whiteColor,
-                  fontSize: 24,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
+              Text('Login', style: authHeaderTextStyle),
+              const SizedBox(height: 10),
+              buildTextFormField(
                 controller: _nameController,
                 focusNode: _nameFocus,
-                cursorColor: YouAppColor.whiteColor,
-                textInputAction: TextInputAction.next,
+                hintText: "Name",
                 keyboardType: TextInputType.text,
                 validator: validateUserName,
-                style: const TextStyle(color: YouAppColor.whiteColor),
-                decoration: _getInputDec("Name"),
                 onFieldSubmitted: (_) =>
-                    _fieldFocusChange(context, _nameFocus, _emailFocus),
+                    fieldFocusChange(context, _nameFocus, _emailFocus),
               ),
               const SizedBox(height: 8),
-              const SizedBox(height: 8),
-              TextFormField(
+              buildTextFormField(
                 controller: _emailController,
                 focusNode: _emailFocus,
-                cursorColor: YouAppColor.whiteColor,
-                validator: validateEmail,
-                textInputAction: TextInputAction.next,
+                hintText: "Enter Username/Email",
                 keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: YouAppColor.whiteColor),
-                decoration: _getInputDec(
-                    _emailFocus.hasFocus ? "" : "Enter Username/Email"),
+                validator: validateEmail,
                 onFieldSubmitted: (_) =>
-                    _fieldFocusChange(context, _emailFocus, _passwordFocus),
+                    fieldFocusChange(context, _emailFocus, _passwordFocus),
               ),
-              const SizedBox(height: 8),
-              TextFormField(
+              buildTextFormField(
                 controller: _passwordController,
                 focusNode: _passwordFocus,
-                validator: validatePassword,
-                cursorColor: YouAppColor.whiteColor,
+                hintText: "Enter Password",
                 keyboardType: TextInputType.visiblePassword,
+                validator: validatePassword,
                 obscureText: _hidePwd,
-                style: const TextStyle(color: YouAppColor.whiteColor),
-                textInputAction: TextInputAction.done,
-                decoration: _getInputDec(
-                  _passwordFocus.hasFocus ? "" : "Enter Password",
-                  suffixIcon: InkWell(
-                    child: _hidePwd
-                        ? const Icon(
-                            Icons.remove_red_eye,
-                            color: YouAppColor.whiteColor,
-                          )
-                        : const Icon(Icons.visibility_off,
-                            color: YouAppColor.whiteColor),
-                    onTap: () => setState(() => _hidePwd = !_hidePwd),
-                  ),
+                suffixIcon: InkWell(
+                  child: _hidePwd
+                      ? const Icon(
+                          Icons.remove_red_eye,
+                          color: YouAppColor.whiteColor,
+                        )
+                      : const Icon(
+                          Icons.visibility_off,
+                          color: YouAppColor.whiteColor,
+                        ),
+                  onTap: () => setState(() => _hidePwd = !_hidePwd),
                 ),
                 onFieldSubmitted: (_) => _passwordFocus.unfocus(),
               ),
@@ -191,14 +166,8 @@ class LoginWidgetState extends State<LoginWidget> {
                           email: _emailController.text.toString())));
                 },
                 isEnabled: isButtonEnabled,
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      color: isButtonEnabled
-                          ? YouAppColor.whiteColor
-                          : YouAppColor.disableTextColor,
-                      fontSize: 16),
-                ),
+                child: DynamicYouAppAuthButton(
+                    str: "Login", isButtonEnabled: isButtonEnabled),
               ),
               const SizedBox(height: 20),
               Align(
@@ -207,11 +176,7 @@ class LoginWidgetState extends State<LoginWidget> {
                   text: TextSpan(text: 'No account?', children: [
                     TextSpan(
                       text: ' Register here',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: YouAppColor.goldColor,
-                        decoration: TextDecoration.underline,
-                      ),
+                      style: authStyle,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           AppRouter.changeRoute<AuthModule>(AuthRoutes.register,
@@ -229,45 +194,11 @@ class LoginWidgetState extends State<LoginWidget> {
     });
   }
 
-  void _fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
-    currentFocus.unfocus();
-    FocusScope.of(context).requestFocus(nextFocus);
-  }
-
-  InputDecoration _getInputDec(String label, {Widget? suffixIcon}) {
-    return InputDecoration(
-      hintText: label,
-      suffixIcon: suffixIcon,
-      fillColor: const Color.fromRGBO(255, 255, 255, 0.06),
-      hintStyle: TextStyle(color: YouAppColor.whiteColor.withOpacity(0.4)),
-      border: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
-    );
-  }
-
-  bool? _updateButtonState() {
+  void _updateButtonState() {
     setState(() {
       isButtonEnabled = _nameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&
           _passwordController.text.isNotEmpty;
     });
-    return null;
   }
 }

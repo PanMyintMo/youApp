@@ -1,10 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/validator.dart';
 import 'package:youapp/util/app_router.dart';
 import 'package:youapp/register/auth_bloc.dart';
+import 'package:youapp/util/youapp_dynamic_textfield.dart';
+import 'package:youapp/util/youapp_text_style.dart';
 import 'package:youapp/widgets/background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youapp/response/authresponse.dart';
@@ -127,93 +130,74 @@ class RegisterWidgetState extends State<RegisterWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 16),
-                const Text(
-                  'Register',
-                  style: TextStyle(
-                    color: YouAppColor.whiteColor,
-                    fontSize: 24,
-                  ),
-                ),
+                Text('Register', style: authHeaderTextStyle),
                 const SizedBox(height: 10),
-                TextFormField(
+                buildTextFormField(
                   controller: _emailController,
                   focusNode: _emailFocus,
-                  cursorColor: YouAppColor.whiteColor,
-                  textInputAction: TextInputAction.next,
+                  hintText: "Enter Username/Email",
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: YouAppColor.whiteColor),
                   validator: validateEmail,
-                  decoration:
-                      _getInputDec(_emailFocus.hasFocus ? "" : "Enter Email"),
                   onFieldSubmitted: (_) =>
-                      _fieldFocusChange(context, _nameFocus, _passwordFocus),
+                      fieldFocusChange(context, _emailFocus, _passwordFocus),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
+                buildTextFormField(
                   controller: _nameController,
                   focusNode: _nameFocus,
-                  cursorColor: YouAppColor.whiteColor,
-                  textInputAction: TextInputAction.next,
+                  hintText: "Name",
                   keyboardType: TextInputType.text,
                   validator: validateUserName,
-                  style: const TextStyle(color: YouAppColor.whiteColor),
-                  decoration: _getInputDec("Name"),
                   onFieldSubmitted: (_) =>
-                      _fieldFocusChange(context, _nameFocus, _passwordFocus),
+                      fieldFocusChange(context, _nameFocus, _emailFocus),
                 ),
                 const SizedBox(height: 8),
-                TextFormField(
+                buildTextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocus,
-                  validator: validatePassword,
-                  cursorColor: YouAppColor.whiteColor,
+                  hintText: "Enter Password",
                   keyboardType: TextInputType.visiblePassword,
+                  validator: validatePassword,
                   obscureText: _hidePwd,
-                  style: const TextStyle(color: YouAppColor.whiteColor),
-                  textInputAction: TextInputAction.next,
-                  decoration: _getInputDec(
-                    _passwordFocus.hasFocus ? "" : "Create Password",
-                    suffixIcon: InkWell(
-                      child: _hidePwd
-                          ? const Icon(
-                              Icons.remove_red_eye,
-                              color: YouAppColor.whiteColor,
-                            )
-                          : const Icon(Icons.visibility_off,
-                              color: YouAppColor.whiteColor),
-                      onTap: () => setState(() => _hidePwd = !_hidePwd),
-                    ),
+                  suffixIcon: InkWell(
+                    child: _hidePwd
+                        ? const Icon(
+                            Icons.remove_red_eye,
+                            color: YouAppColor.whiteColor,
+                          )
+                        : const Icon(
+                            Icons.visibility_off,
+                            color: YouAppColor.whiteColor,
+                          ),
+                    onTap: () => setState(() => _hidePwd = !_hidePwd),
                   ),
                   onFieldSubmitted: (_) => _passwordFocus.unfocus(),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
+                buildTextFormField(
                   controller: _confirmPasswordController,
                   focusNode: _confirmPassFocus,
+                  hintText: "Enter Password",
+                  keyboardType: TextInputType.visiblePassword,
                   validator: (value) => validateConfirmPassword(
                       value, _confirmPasswordController.text),
-                  cursorColor: YouAppColor.whiteColor,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: _hideConfirmPassword,
-                  style: const TextStyle(color: YouAppColor.whiteColor),
-                  textInputAction: TextInputAction.done,
-                  decoration: _getInputDec(
-                    _confirmPassFocus.hasFocus ? "" : "Confirm Password",
-                    suffixIcon: InkWell(
-                      child: _hideConfirmPassword
-                          ? const Icon(
-                              Icons.remove_red_eye,
-                              color: YouAppColor.whiteColor,
-                            )
-                          : const Icon(Icons.visibility_off,
-                              color: YouAppColor.whiteColor),
-                      onTap: () => setState(
-                          () => _hideConfirmPassword = !_hideConfirmPassword),
-                    ),
+                  obscureText: _hidePwd,
+                  suffixIcon: InkWell(
+                    child: _hideConfirmPassword
+                        ? const Icon(
+                            Icons.remove_red_eye,
+                            color: YouAppColor.whiteColor,
+                          )
+                        : const Icon(
+                            Icons.visibility_off,
+                            color: YouAppColor.whiteColor,
+                          ),
+                    onTap: () => setState(
+                        () => _hideConfirmPassword = !_hideConfirmPassword),
                   ),
                   onFieldSubmitted: (_) => _confirmPassFocus.unfocus(),
                 ),
@@ -230,14 +214,8 @@ class RegisterWidgetState extends State<RegisterWidget> {
                     }
                   },
                   isEnabled: isButtonEnabled,
-                  child: Text(
-                    "Register",
-                    style: TextStyle(
-                        color: isButtonEnabled
-                            ? YouAppColor.whiteColor
-                            : YouAppColor.disableTextColor,
-                        fontSize: 16),
-                  ),
+                  child: DynamicYouAppAuthButton(
+                      str: "Register", isButtonEnabled: isButtonEnabled),
                 ),
                 const SizedBox(height: 20),
                 Align(
@@ -245,19 +223,14 @@ class RegisterWidgetState extends State<RegisterWidget> {
                   child: RichText(
                     text: TextSpan(text: 'Have an account? ', children: [
                       TextSpan(
-                        text: 'Login Here',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            AppRouter.changeRoute<AuthModule>(
-                              AuthRoutes.login,
-                            );
-                          },
-                        style: const TextStyle(
-                            fontSize: 14,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                            color: YouAppColor.goldColor),
-                      ),
+                          text: 'Login Here',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              AppRouter.changeRoute<AuthModule>(
+                                AuthRoutes.login,
+                              );
+                            },
+                          style: authStyle),
                     ]),
                   ),
                 ),
@@ -267,39 +240,6 @@ class RegisterWidgetState extends State<RegisterWidget> {
           ),
         );
       },
-    );
-  }
-
-  void _fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
-    currentFocus.unfocus();
-    FocusScope.of(context).requestFocus(nextFocus);
-  }
-
-  InputDecoration _getInputDec(String label, {Widget? suffixIcon}) {
-    return InputDecoration(
-      hintText: label,
-      suffixIcon: suffixIcon,
-      fillColor: const Color.fromRGBO(255, 255, 255, 0.06),
-      hintStyle: TextStyle(color: YouAppColor.whiteColor.withOpacity(0.4)),
-      border: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.06),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-      ),
     );
   }
 }
