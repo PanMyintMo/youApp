@@ -1,2 +1,2 @@
-# youapp
-Creating application for youapp assignment
+# youApp
+YouApp
