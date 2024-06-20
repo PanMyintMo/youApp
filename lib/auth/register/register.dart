@@ -1,10 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:youapp/auth/authutil/youapprichtext.dart';
 import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/validator.dart';
-import 'package:youapp/util/app_router.dart';
 import 'package:youapp/register/auth_bloc.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
 import 'package:youapp/util/youapp_text_style.dart';
@@ -14,7 +13,6 @@ import 'package:youapp/response/authresponse.dart';
 import 'package:youapp/widgets/ptb_go_button.dart';
 import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/model/authrequest_model.dart';
-import 'package:youapp/module/auth/auth_module.dart';
 
 class RegisterWidget extends StatefulWidget {
   const RegisterWidget({super.key});
@@ -80,18 +78,14 @@ class RegisterWidgetState extends State<RegisterWidget> {
               height: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top -
                   MediaQuery.of(context).padding.bottom,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        _getForm(),
-                      ],
-                    ),
-                  ),
-                ],
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _getForm(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -153,7 +147,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                   onFieldSubmitted: (_) =>
                       fieldFocusChange(context, _nameFocus, _emailFocus),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 buildTextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocus,
@@ -203,6 +197,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 ),
                 const SizedBox(height: 24),
                 YouAppButton(
+                  key: Key('Register_Btn'),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       context.read<AuthBloc>().add(RegisterEvent(
@@ -218,21 +213,10 @@ class RegisterWidgetState extends State<RegisterWidget> {
                       str: "Register", isButtonEnabled: isButtonEnabled),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: RichText(
-                    text: TextSpan(text: 'Have an account? ', children: [
-                      TextSpan(
-                          text: 'Login Here',
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              AppRouter.changeRoute<AuthModule>(
-                                AuthRoutes.login,
-                              );
-                            },
-                          style: authStyle),
-                    ]),
-                  ),
+                const AuthRichText(
+                  str1: 'Have an account?',
+                  actionText: 'Login Here',
+                  route: AuthRoutes.login,
                 ),
                 const SizedBox(height: 20),
               ],

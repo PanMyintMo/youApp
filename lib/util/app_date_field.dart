@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:youapp/extension/birth_extension.dart';
 import 'package:youapp/util/app_color.dart';

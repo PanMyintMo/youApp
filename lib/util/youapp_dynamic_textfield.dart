@@ -3,13 +3,14 @@ import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/youapp_text_style.dart';
 
 TextFormField buildTextFormField({
+
   required TextEditingController controller,
   required FocusNode focusNode,
   required String hintText,
   required TextInputType keyboardType,
   required FormFieldValidator<String>? validator,
   required void Function(String)? onFieldSubmitted,
-  bool obscureText = false, // Add this parameter
+  bool obscureText = false, 
   Widget? suffixIcon,
 }) {
   return TextFormField(

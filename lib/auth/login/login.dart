@@ -1,15 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youapp/auth/authutil/youapprichtext.dart';
 import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/login/login_bloc.dart';
 import 'package:youapp/model/authrequest_model.dart';
-import 'package:youapp/module/auth/auth_module.dart';
 import 'package:youapp/response/authresponse.dart';
 import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/util/app_color.dart';
-import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/validator.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
 import 'package:youapp/util/youapp_text_style.dart';
@@ -64,18 +62,14 @@ class LoginWidgetState extends State<LoginWidget> {
               height: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top -
                   MediaQuery.of(context).padding.bottom,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        _getForm(),
-                      ],
-                    ),
-                  ),
-                ],
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _getForm(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -114,9 +108,9 @@ class LoginWidgetState extends State<LoginWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 16),
-              Text('Login', style: authHeaderTextStyle),
+              Text('Login', key: Key('login_header'), style: authHeaderTextStyle),
               const SizedBox(height: 10),
-              buildTextFormField(
+              buildTextFormField(            
                 controller: _nameController,
                 focusNode: _nameFocus,
                 hintText: "Name",
@@ -126,7 +120,7 @@ class LoginWidgetState extends State<LoginWidget> {
                     fieldFocusChange(context, _nameFocus, _emailFocus),
               ),
               const SizedBox(height: 8),
-              buildTextFormField(
+              buildTextFormField(             
                 controller: _emailController,
                 focusNode: _emailFocus,
                 hintText: "Enter Username/Email",
@@ -135,7 +129,7 @@ class LoginWidgetState extends State<LoginWidget> {
                 onFieldSubmitted: (_) =>
                     fieldFocusChange(context, _emailFocus, _passwordFocus),
               ),
-              buildTextFormField(
+              buildTextFormField(               
                 controller: _passwordController,
                 focusNode: _passwordFocus,
                 hintText: "Enter Password",
@@ -158,33 +152,25 @@ class LoginWidgetState extends State<LoginWidget> {
               ),
               const SizedBox(height: 24),
               YouAppButton(
+                key: Key('login_button'),
                 onPressed: () {
-                  context.read<LoginBloc>().add(LoginRequestEvent(
-                      loginRequestModel: AuthRequestModel(
-                          username: _nameController.text.toString(),
-                          password: _passwordController.text.toString(),
-                          email: _emailController.text.toString())));
+                  if (_formKey.currentState!.validate()) {
+                    context.read<LoginBloc>().add(LoginRequestEvent(
+                        loginRequestModel: AuthRequestModel(
+                            username: _nameController.text.toString(),
+                            password: _passwordController.text.toString(),
+                            email: _emailController.text.toString())));
+                  }
                 },
                 isEnabled: isButtonEnabled,
                 child: DynamicYouAppAuthButton(
                     str: "Login", isButtonEnabled: isButtonEnabled),
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: RichText(
-                  text: TextSpan(text: 'No account?', children: [
-                    TextSpan(
-                      text: ' Register here',
-                      style: authStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          AppRouter.changeRoute<AuthModule>(AuthRoutes.register,
-                              isReplaceAll: true);
-                        },
-                    ),
-                  ]),
-                ),
+              const AuthRichText(
+                str1: 'No account?',
+                actionText: 'Register here',
+                route: AuthRoutes.register,
               ),
               const SizedBox(height: 20),
             ],
