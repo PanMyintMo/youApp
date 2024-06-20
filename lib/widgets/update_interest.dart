@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'package:youapp/module/profile/profile_module.dart';
-
 import 'package:youapp/routes/profile/profile_routes.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/app_router.dart';
@@ -41,8 +40,11 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
         actions: [
           TextButton(
             onPressed: () {
-              AppRouter.changeRoute<ProfileModule>(ProfileRoutes.interest,
-                  interests: _stringTagController.getTags, isReplace: true);
+              AppRouter.changeRoute<ProfileModule>(
+                ProfileRoutes.interest,
+                interests: _stringTagController.getTags,
+                isReplace: true,
+              );
             },
             child: const Text(
               'Save',
@@ -53,147 +55,165 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
       ),
       body: GradientBackground(
         child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 4,
-              ),
-              const SizedBox(
-                child: Text(
+          padding: const EdgeInsets.only(top: 25, left: 10),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height / 4),
+                const Text(
                   'Tell everyone about yourself',
                   style: TextStyle(
-                      fontSize: 14,
-                      color: YouAppColor.goldColor,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 14,
+                    color: YouAppColor.goldColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const SizedBox(
-                child: Text(
-                  'What interst you?',
+                const SizedBox(height: 10),
+                const Text(
+                  'What interests you?',
                   style: TextStyle(fontSize: 16, color: YouAppColor.whiteColor),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFieldTags<String>(
-                textfieldTagsController: _stringTagController,
-                initialTags: const [],
-                textSeparators: const [' ', ','],
-                letterCase: LetterCase.normal,
-                validator: (String tag) {
-                  if (tag == 'testing') {
-                    return 'testing not allowed';
-                  }
-                  return null;
-                },
-                inputFieldBuilder: (context, inputFieldValues) {
-                  return TextField(
-                    controller: inputFieldValues.textEditingController,
-                    focusNode: inputFieldValues.focusNode,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    style: const TextStyle(color: YouAppColor.whiteColor),
-                    textInputAction: TextInputAction.done,
-                    cursorColor: YouAppColor.whiteColor,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide(
+                const SizedBox(height: 10),
+                TextFieldTags<String>(
+                  textfieldTagsController: _stringTagController,
+                  initialTags: const [],
+                  textSeparators: const [' ', ','],
+                  letterCase: LetterCase.normal,
+                  validator: (String tag) {
+                    if (tag == 'testing') {
+                      return 'testing not allowed';
+                    }
+                    return null;
+                  },
+                  inputFieldBuilder: (context, inputFieldValues) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      child: TextField(
+                        controller: inputFieldValues.textEditingController,
+                        focusNode: inputFieldValues.focusNode,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        style: const TextStyle(
                           color: YouAppColor.whiteColor,
-                          width: 3.0,
+                          fontSize: 18,
                         ),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: YouAppColor.whiteColor,
-                          width: 3.0,
-                        ),
-                      ),
-                      helperText: 'Enter your interest...',
-                      helperStyle: const TextStyle(
-                        color: YouAppColor.whiteColor,
-                      ),
-                      hintText: inputFieldValues.tags.isNotEmpty
-                          ? ''
-                          : "Enter your interest...",
-                      errorText: inputFieldValues.error,
-                      hintStyle: const TextStyle(color: YouAppColor.whiteColor),
-                      prefixIconConstraints:
-                          BoxConstraints(maxWidth: _distanceToField * 0.74),
-                      prefixIcon: inputFieldValues.tags.isNotEmpty
-                          ? Wrap(
-                              direction: Axis.horizontal,
-                              spacing: 8.0,
-                              children:
-                                  inputFieldValues.tags.map((String tagData) {
-                                return Container(
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0),
-                                    ),
-                                    color: Color.fromRGBO(255, 255, 255, 0.1),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                    vertical: 4.0,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      InkWell(
-                                        child: Text(
-                                          '#$tagData',
-                                          style: const TextStyle(
-                                            color: YouAppColor.whiteColor,
+                        textInputAction: TextInputAction.done,
+                        cursorColor: YouAppColor.whiteColor,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: YouAppColor.whiteColor,
+                              width: 3.0,
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: YouAppColor.whiteColor,
+                              width: 3.0,
+                            ),
+                          ),
+                          helperText: 'Enter your interest...',
+                          helperStyle: const TextStyle(
+                            color: YouAppColor.whiteColor,
+                          ),
+                          hintText: inputFieldValues.tags.isNotEmpty
+                              ? ''
+                              : "Enter your interest...",
+                          errorText: inputFieldValues.error,
+                          hintStyle: const TextStyle(
+                            color: YouAppColor.whiteColor,
+                          ),
+                          prefixIconConstraints: BoxConstraints(
+                            maxWidth: _distanceToField * 0.74,
+                          ),
+                          prefixIcon: inputFieldValues.tags.isNotEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Wrap(
+                                    direction: Axis.horizontal,
+                                    spacing: 8.0,
+                                    runSpacing: 10,
+                                    children: inputFieldValues.tags
+                                        .map((String tagData) {
+                                      return Container(
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0),
+                                          ),
+                                          color: Color.fromRGBO(
+                                            255,
+                                            255,
+                                            255,
+                                            0.1,
                                           ),
                                         ),
-                                        onTap: () {},
-                                      ),
-                                      const SizedBox(width: 4.0),
-                                      InkWell(
-                                        child: const Icon(
-                                          Icons.cancel,
-                                          size: 14.0,
-                                          color: Color.fromARGB(
-                                              255, 233, 233, 233),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0,
+                                          vertical: 4.0,
                                         ),
-                                        onTap: () {
-                                          inputFieldValues.onTagDelete(tagData);
-                                        },
-                                      ),
-                                    ],
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            InkWell(
+                                              child: Text(
+                                                '#$tagData',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: YouAppColor.whiteColor,
+                                                ),
+                                              ),
+                                              onTap: () {},
+                                            ),
+                                            const SizedBox(width: 4.0),
+                                            InkWell(
+                                              child: const Icon(
+                                                Icons.cancel,
+                                                size: 14.0,
+                                                color: Color.fromARGB(
+                                                  255,
+                                                  233,
+                                                  233,
+                                                  233,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                inputFieldValues
+                                                    .onTagDelete(tagData);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
-                                );
-                              }).toList(),
-                            )
-                          : null,
-                    ),
-                    onSubmitted: (value) {
-                      if (_stringTagController.getValidator != null) {
-                        _stringTagController.setError =
-                            _stringTagController.getValidator!(value);
-                        if (_stringTagController.getError == null) {
-                          setState(() {
-                            _stringTagController.addTag(value);
-                          });
-                        }
-                      } else {
-                        setState(() {
-                          _stringTagController.addTag(value);
-                        });
-                      }
-                      inputFieldValues.textEditingController.clear();
-                      inputFieldValues.focusNode.requestFocus();
-                    },
-                  );
-                },
-              ),
-            ],
+                                )
+                              : null,
+                        ),
+                        onSubmitted: (value) {
+                          if (_stringTagController.getValidator != null) {
+                            _stringTagController.setError =
+                                _stringTagController.getValidator!(value);
+                            if (_stringTagController.getError == null) {
+                              setState(() {
+                                _stringTagController.addTag(value);
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              _stringTagController.addTag(value);
+                            });
+                          }
+                          inputFieldValues.textEditingController.clear();
+                          inputFieldValues.focusNode.requestFocus();
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
