@@ -126,7 +126,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 const SizedBox(height: 16),
                 Text('Register', style: authHeaderTextStyle),
                 const SizedBox(height: 10),
-                buildTextFormField(
+                youAppTextFormField(
                   controller: _emailController,
                   focusNode: _emailFocus,
                   hintText: "Enter Username/Email",
@@ -138,7 +138,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 const SizedBox(
                   height: 10,
                 ),
-                buildTextFormField(
+                youAppTextFormField(
                   controller: _nameController,
                   focusNode: _nameFocus,
                   hintText: "Name",
@@ -148,7 +148,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                       fieldFocusChange(context, _nameFocus, _emailFocus),
                 ),
                 const SizedBox(height: 10),
-                buildTextFormField(
+                youAppTextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocus,
                   hintText: "Enter Password",
@@ -172,10 +172,10 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 const SizedBox(
                   height: 10,
                 ),
-                buildTextFormField(
+                youAppTextFormField(
                   controller: _confirmPasswordController,
                   focusNode: _confirmPassFocus,
-                  hintText: "Enter Password",
+                  hintText: "Enter Confirm Password",
                   keyboardType: TextInputType.visiblePassword,
                   validator: (value) => validateConfirmPassword(
                       value, _confirmPasswordController.text),

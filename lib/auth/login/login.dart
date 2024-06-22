@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:youapp/auth/authutil/youapprichtext.dart';
-import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/login/login_bloc.dart';
-import 'package:youapp/model/authrequest_model.dart';
 import 'package:youapp/response/authresponse.dart';
 import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/validator.dart';
-import 'package:youapp/util/youapp_dynamic_textfield.dart';
-import 'package:youapp/util/youapp_text_style.dart';
 import 'package:youapp/widgets/background.dart';
 import 'package:youapp/widgets/ptb_go_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youapp/model/authrequest_model.dart';
+import 'package:youapp/util/youapp_text_style.dart';
+import 'package:youapp/auth/authutil/youapprichtext.dart';
+import 'package:youapp/auth/authutil/youapptextbutton.dart';
+import 'package:youapp/util/youapp_dynamic_textfield.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -108,9 +108,10 @@ class LoginWidgetState extends State<LoginWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 16),
-              Text('Login', key: Key('login_header'), style: authHeaderTextStyle),
+              Text('Login',
+                  key: Key('login_header'), style: authHeaderTextStyle),
               const SizedBox(height: 10),
-              buildTextFormField(            
+              youAppTextFormField(
                 controller: _nameController,
                 focusNode: _nameFocus,
                 hintText: "Name",
@@ -120,7 +121,7 @@ class LoginWidgetState extends State<LoginWidget> {
                     fieldFocusChange(context, _nameFocus, _emailFocus),
               ),
               const SizedBox(height: 8),
-              buildTextFormField(             
+              youAppTextFormField(
                 controller: _emailController,
                 focusNode: _emailFocus,
                 hintText: "Enter Username/Email",
@@ -129,7 +130,7 @@ class LoginWidgetState extends State<LoginWidget> {
                 onFieldSubmitted: (_) =>
                     fieldFocusChange(context, _emailFocus, _passwordFocus),
               ),
-              buildTextFormField(               
+              youAppTextFormField(
                 controller: _passwordController,
                 focusNode: _passwordFocus,
                 hintText: "Enter Password",

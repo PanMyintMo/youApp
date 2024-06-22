@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/youapp_text_style.dart';
 
-TextFormField buildTextFormField({
-
+TextFormField youAppTextFormField({
   required TextEditingController controller,
   required FocusNode focusNode,
   required String hintText,
   required TextInputType keyboardType,
   required FormFieldValidator<String>? validator,
   required void Function(String)? onFieldSubmitted,
-  bool obscureText = false, 
+  bool obscureText = false,
   Widget? suffixIcon,
 }) {
   return TextFormField(
