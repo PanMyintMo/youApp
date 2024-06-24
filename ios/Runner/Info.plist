@@ -13,6 +13,13 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
+
+	//for image
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to take photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to select photos</string>
+
 	<string>youapp</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>

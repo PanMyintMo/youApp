@@ -10,9 +10,11 @@ TextFormField youAppTextFormField({
   required FormFieldValidator<String>? validator,
   required void Function(String)? onFieldSubmitted,
   bool obscureText = false,
+  Key? key,
   Widget? suffixIcon,
 }) {
   return TextFormField(
+    key: key,
     controller: controller,
     focusNode: focusNode,
     validator: validator,

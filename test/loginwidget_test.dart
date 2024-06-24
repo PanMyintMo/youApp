@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:youapp/auth/login/login.dart';
+import 'package:youapp/login/login_bloc.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:youapp/widgets/ptb_go_button.dart';
 
@@ -33,6 +36,36 @@ void main() {
       expect(find.byKey(key), findsOneWidget);
       await tester.tap(find.byKey(key));
       verify(mockCallback()).called(1);
+    });
+
+    testWidgets(
+        'two TextFormField widgets (email and password) should be found for login widget',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider(
+              create: (context) => LoginBloc(),
+              child: const LoginWidget(),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('emailField')), findsOneWidget);
+      expect(find.byKey(const Key('passwordField')), findsOneWidget);
+
+      await tester.enterText(
+          find.byKey(const Key('emailField')), 'testing@gmail.com');
+
+      await tester.enterText(
+          find.byKey(const Key('passwordField')), 'TestingPassword');
+
+      // Verify the entered text
+      expect(find.text('testing@gmail.com'), findsOneWidget);
+      expect(find.text('TestingPassword'), findsOneWidget);
     });
 
     testWidgets('should not trigger onPressed callback when button is disabled',

@@ -122,6 +122,7 @@ class LoginWidgetState extends State<LoginWidget> {
               ),
               const SizedBox(height: 8),
               youAppTextFormField(
+                key: const Key('emailField'),
                 controller: _emailController,
                 focusNode: _emailFocus,
                 hintText: "Enter Username/Email",
@@ -131,6 +132,7 @@ class LoginWidgetState extends State<LoginWidget> {
                     fieldFocusChange(context, _emailFocus, _passwordFocus),
               ),
               youAppTextFormField(
+                key: Key('passwordField'),
                 controller: _passwordController,
                 focusNode: _passwordFocus,
                 hintText: "Enter Password",

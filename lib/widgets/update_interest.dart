@@ -192,6 +192,10 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                               : null,
                         ),
                         onSubmitted: (value) {
+                          if (value.trim().isEmpty) {
+                            return;
+                          }
+
                           if (_stringTagController.getValidator != null) {
                             _stringTagController.setError =
                                 _stringTagController.getValidator!(value);

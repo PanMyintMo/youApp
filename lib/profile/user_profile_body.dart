@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/extension/birth_extension.dart';
 import 'package:youapp/profile/bloc/profile_bloc.dart';
@@ -85,9 +86,27 @@ class _UserProfileBodyState extends State<UserProfileBody> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-        logger.e("Image$_image");
+
+        saveImage(_image);
         widget.callBackImage(_image);
       });
+    }
+  }
+
+  void saveImage(File? image) async {
+    try {
+      // Step 3: Get directory where we can duplicate selected file.
+
+      final String path = (await getApplicationDocumentsDirectory()).path;
+
+      File convertedImg = File(_image!.path);
+    
+      final String fileName = image!.path.split('/').last;
+      final File localImage = await convertedImg.copy('$path/$fileName');
+
+      logger.d('Save image under: $path/$fileName');
+    } catch (e) {
+      logger.e("Error saving image $e");
     }
   }
 
