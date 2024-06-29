@@ -28,7 +28,7 @@ class NetworkApiService extends BaseApiServices {
     try {
       final response = await dio.get(url).timeout(const Duration(seconds: 15));
 
-      logger.d("Reach here and response for get ${response.data}");
+    //  logger.d("Reach here and response for get ${response.data}");
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

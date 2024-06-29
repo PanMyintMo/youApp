@@ -24,23 +24,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         appTitle,
         style: const TextStyle(color: YouAppColor.whiteColor, fontSize: 16),
       ),
-      leading: const Flexible(
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 14,
-                color: YouAppColor.whiteColor,
-              ),
+      leading: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Icon(
+              Icons.arrow_back_ios,
+              size: 14,
+              color: YouAppColor.whiteColor,
             ),
-            Text(
-              'Back',
-              style: TextStyle(fontSize: 14, color: YouAppColor.whiteColor),
-            ),
-          ],
-        ),
+          ),
+          Text(
+            'Back',
+            style: TextStyle(fontSize: 14, color: YouAppColor.whiteColor),
+          ),
+        ],
       ),
     );
   }

@@ -45,8 +45,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: Status.loading));
         final response = await repository.getProfile();
 
+
         final profileResponse = ProfileResponse.fromJson(response);
 
+        logger.d(
+            "Profile Response is ${profileResponse.userData.email}");
         EasyLoading.showSuccess(profileResponse.message);
         emit(state.copyWith(status: Status.success, response: profileResponse));
       } catch (e) {

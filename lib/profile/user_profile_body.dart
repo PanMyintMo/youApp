@@ -100,7 +100,7 @@ class _UserProfileBodyState extends State<UserProfileBody> {
       final String path = (await getApplicationDocumentsDirectory()).path;
 
       File convertedImg = File(_image!.path);
-    
+
       final String fileName = image!.path.split('/').last;
       final File localImage = await convertedImg.copy('$path/$fileName');
 
@@ -140,7 +140,6 @@ class _UserProfileBodyState extends State<UserProfileBody> {
             break;
           case Status.success:
             profileResponse = state.response;
-            logger.e(profileResponse);
 
             break;
           case Status.failed:
@@ -169,7 +168,8 @@ class _UserProfileBodyState extends State<UserProfileBody> {
                                 birthday: birthday,
                                 height: height,
                                 weight: weight,
-                                interests: [])));
+                                interests: widget
+                                    .profileResponse!.userData.interests)));
                       } else {
                         if (displayName.isEmpty &&
                             birthday.isEmpty &&
@@ -183,7 +183,8 @@ class _UserProfileBodyState extends State<UserProfileBody> {
                                   birthday: birthday,
                                   height: height,
                                   weight: weight,
-                                  interests: [])));
+                                  interests: widget
+                                      .profileResponse!.userData.interests)));
                         }
                       }
                     },

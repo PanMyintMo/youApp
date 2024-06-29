@@ -95,6 +95,10 @@ class _UserProfileState extends State<UserProfile> {
 
           case Status.success:
             profileResponse = state.response;
+            logger.d(
+                "Interested response in userprofile is ${profileResponse?.userData.interests}");
+            logger.d(
+                "USer Profile response is ${profileResponse?.userData.name}");
             buildUserProfileHome();
 
           default:
@@ -257,7 +261,8 @@ class _UserProfileState extends State<UserProfile> {
           ),
           const SizedBox(width: 10),
           Text(
-            profileResponse?.userData.interests == null
+            profileResponse?.userData.interests == null ||
+                    profileResponse!.userData.interests.isEmpty
                 ? description
                 : profileResponse!.userData.interests.join(', '),
             style: const TextStyle(color: Colors.grey, fontSize: 14),
@@ -300,8 +305,8 @@ class _UserProfileState extends State<UserProfile> {
           ),
           const SizedBox(width: 10),
           if (profileResponse?.userData.birthday != null &&
-              profileResponse?.userData.height != 0 &&
-              profileResponse?.userData.weight != 0) ...[
+              profileResponse?.userData.height != null &&
+              profileResponse?.userData.weight != null) ...[
             buildUserData(profileResponse!.userData)
           ] else
             Text(

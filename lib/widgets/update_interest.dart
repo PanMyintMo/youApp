@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-import 'package:youapp/module/profile/profile_module.dart';
-import 'package:youapp/routes/profile/profile_routes.dart';
+import 'package:youapp/profile/bloc/profile_bloc.dart';
+import 'package:youapp/profile/request/profile_request.dart';
+import 'package:youapp/profile/response/profile_response.dart';
 import 'package:youapp/util/app_color.dart';
-import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/custom_app_bar.dart';
 import 'package:youapp/widgets/background.dart';
 
 class UpdateInterestWidget extends StatefulWidget {
-  const UpdateInterestWidget({super.key});
+  final ProfileResponse profileResponse;
+  const UpdateInterestWidget({super.key, required this.profileResponse});
 
   @override
   State<UpdateInterestWidget> createState() => _UpdateInterestWidgetState();
@@ -40,11 +42,15 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
         actions: [
           TextButton(
             onPressed: () {
-              AppRouter.changeRoute<ProfileModule>(
-                ProfileRoutes.interest,
-                interests: _stringTagController.getTags,
-                isReplace: true,
-              );
+              context.read<ProfileBloc>().add(ProfileCreateEvent(
+                  profileRequest: ProfileRequest(
+                      name: widget.profileResponse.userData.name,
+                      birthday: widget.profileResponse.userData.birthday,
+                      height: widget.profileResponse.userData.height,
+                      weight: widget.profileResponse.userData.weight,
+                      interests: _stringTagController.getTags!)));
+
+         
             },
             child: const Text(
               'Save',
@@ -54,9 +60,9 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
         ],
       ),
       body: GradientBackground(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 25, left: 10),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25, left: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -77,7 +83,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                 const SizedBox(height: 10),
                 TextFieldTags<String>(
                   textfieldTagsController: _stringTagController,
-                  initialTags: const [],
+                  initialTags: widget.profileResponse.userData.interests,
                   textSeparators: const [' ', ','],
                   letterCase: LetterCase.normal,
                   validator: (String tag) {
@@ -195,7 +201,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                           if (value.trim().isEmpty) {
                             return;
                           }
-
+          
                           if (_stringTagController.getValidator != null) {
                             _stringTagController.setError =
                                 _stringTagController.getValidator!(value);
