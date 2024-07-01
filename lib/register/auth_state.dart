@@ -1,18 +1,21 @@
 part of 'auth_bloc.dart';
 
-@immutable
-class AuthState {
-  final Status addStatus;
+class AuthState extends Equatable {
+  final Status status;
   final AuthResponse? response;
 
-  const AuthState({required this.addStatus, this.response});
+  const AuthState({required this.status, this.response});
 
   AuthState copyWith({
-    Status? addStatus,
+    Status? status,
     AuthResponse? response,
   }) {
     return AuthState(
-        addStatus: addStatus ?? this.addStatus,
-        response: response ?? this.response);
+      status: status ?? this.status,
+      response: response ?? this.response,
+    );
   }
+
+  @override
+  List<Object?> get props => [status, response];
 }

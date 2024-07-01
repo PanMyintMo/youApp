@@ -97,7 +97,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
   Widget _getForm() {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        switch (state.addStatus) {
+        switch (state.status) {
           case Status.loading:
             const Center(
               child: CircularProgressIndicator(),
