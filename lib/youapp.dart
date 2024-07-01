@@ -6,6 +6,7 @@ import 'package:youapp/login/login_bloc.dart';
 import 'package:youapp/profile/bloc/profile_bloc.dart';
 import 'package:youapp/register/auth_bloc.dart';
 import 'package:youapp/util/app_color.dart';
+import 'package:youapp/util/app_logger.dart';
 
 class YouApp extends StatelessWidget {
   const YouApp({super.key});
@@ -25,7 +26,10 @@ class YouApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp.router(
-        builder: EasyLoading.init(),
+        builder: (context, child) {
+          logger.d("Easy Hreeee");
+          return EasyLoading.init()(context, child);
+        },
         debugShowCheckedModeBanner: false,
         title: 'YouApp',
         theme: ThemeData(
@@ -40,4 +44,8 @@ class YouApp extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(const YouApp());
 }

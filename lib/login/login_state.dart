@@ -1,18 +1,20 @@
 part of 'login_bloc.dart';
 
 @immutable
-class LoginState {
-  final Status addStatus;
+class LoginState extends Equatable {
+  final Status status;
   final LoginResponse? response;
 
-  const LoginState({required this.addStatus, this.response});
+  const LoginState({required this.status, this.response});
 
   LoginState copyWith({
-    Status? addStatus,
+    Status? status,
     LoginResponse? response,
   }) {
     return LoginState(
-        addStatus: addStatus ?? this.addStatus,
-        response: response ?? this.response);
+        status: status ?? this.status, response: response ?? this.response);
   }
+
+  @override
+  List<Object?> get props => [status, response];
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:youapp/auth/authutil/youapprichtext.dart';
 import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/util/app_color.dart';
+import 'package:youapp/util/app_string.dart';
 import 'package:youapp/util/validator.dart';
 import 'package:youapp/register/auth_bloc.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
@@ -105,6 +107,12 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
           case Status.success:
             responseData = state.response;
+
+            responseData!.message.contains(AppString.userAlreadyRegisterMessage)
+                ? EasyLoading.showSuccess(responseData!.message.toString())
+                : EasyLoading.showToast(responseData!.message.toString());
+
+          // AppRouter.changeRoute<AuthModule>(AuthRoutes.login);
 
           case Status.failed:
             const Center(

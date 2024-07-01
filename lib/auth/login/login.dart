@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:youapp/enum/status.dart';
 import 'package:youapp/login/login_bloc.dart';
+import 'package:youapp/module/profile/profile_module.dart';
 import 'package:youapp/response/authresponse.dart';
 import 'package:youapp/routes/auth/auth_routes.dart';
+import 'package:youapp/routes/profile/profile_routes.dart';
 import 'package:youapp/util/app_color.dart';
+
+import 'package:youapp/util/app_router.dart';
+import 'package:youapp/util/app_string.dart';
 import 'package:youapp/util/validator.dart';
 import 'package:youapp/widgets/background.dart';
 import 'package:youapp/widgets/ptb_go_button.dart';
@@ -80,7 +86,7 @@ class LoginWidgetState extends State<LoginWidget> {
 
   Widget _getForm() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      switch (state.addStatus) {
+      switch (state.status) {
         case Status.loading:
           return const Center(
             child: CircularProgressIndicator(),
@@ -88,6 +94,14 @@ class LoginWidgetState extends State<LoginWidget> {
 
         case Status.success:
           loginResponse = state.response;
+
+          loginResponse!.message.contains(AppString.incorrectPassword)
+              ? EasyLoading.showToast(loginResponse!.message.toString())
+              : AppRouter.changeRoute<ProfileModule>(
+                  ProfileRoutes.profile,
+                  isReplaceAll: true,
+                );
+
           break;
 
         case Status.failed:

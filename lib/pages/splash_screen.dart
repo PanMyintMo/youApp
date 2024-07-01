@@ -5,7 +5,6 @@ import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/routes/profile/profile_routes.dart';
 import 'package:youapp/services/share_preference.dart';
 import 'package:youapp/util/app_color.dart';
-import 'package:youapp/util/app_logger.dart';
 
 import 'package:youapp/util/app_router.dart';
 
@@ -27,7 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   getDataFromSharedPreference() async {
     final token = await user.getToken();
-    logger.d("Token is $token");
 
     if (token != null && token.isNotEmpty) {
       AppRouter.changeRoute<ProfileModule>(

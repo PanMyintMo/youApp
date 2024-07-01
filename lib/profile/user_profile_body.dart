@@ -41,6 +41,13 @@ class _UserProfileBodyState extends State<UserProfileBody> {
 
   final ImagePicker _picker = ImagePicker();
 
+  bool get isFormValid =>
+      displayName.isNotEmpty &&
+          height != 0 &&
+          weight != 0 &&
+          birthday.isNotEmpty ||
+      gender.isNotEmpty;
+
   void getDisplayNameFromCallBack(String text) {
     setState(() {
       displayName = text;
@@ -65,12 +72,9 @@ class _UserProfileBodyState extends State<UserProfileBody> {
     });
   }
 
-  getHeightFromCallBack(String text) {
+  void getHeightFromCallBack(String text) {
     setState(() {
       height = int.parse(text);
-      if (height != 0) {
-        "${height}cm";
-      }
     });
   }
 
@@ -86,7 +90,6 @@ class _UserProfileBodyState extends State<UserProfileBody> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
-
         saveImage(_image);
         widget.callBackImage(_image);
       });
@@ -95,16 +98,10 @@ class _UserProfileBodyState extends State<UserProfileBody> {
 
   void saveImage(File? image) async {
     try {
-      // Step 3: Get directory where we can duplicate selected file.
-
       final String path = (await getApplicationDocumentsDirectory()).path;
-
-      File convertedImg = File(_image!.path);
-
-      final String fileName = image!.path.split('/').last;
-      final File localImage = await convertedImg.copy('$path/$fileName');
-
-      logger.d('Save image under: $path/$fileName');
+      final File localImage =
+          await File(image!.path).copy('$path/${image.path.split('/').last}');
+      logger.d('Save image under: $path/${image.path.split('/').last}');
     } catch (e) {
       logger.e("Error saving image $e");
     }
@@ -112,16 +109,14 @@ class _UserProfileBodyState extends State<UserProfileBody> {
 
   @override
   void initState() {
-    displayName = widget.profileResponse?.userData.name ?? "";
+    displayName = widget.profileResponse?.userData.username ?? "";
+
     birthday = widget.profileResponse?.userData.birthday ?? "";
     if (birthday.isNotEmpty) {
       horoscope = DateTime.parse(widget.profileResponse!.userData.birthday)
           .getHoroscopeSign();
       zodiac = DateTime.parse(widget.profileResponse!.userData.birthday)
           .getZodiacSign();
-    } else {
-      horoscope = "";
-      zodiac = "";
     }
     height = widget.profileResponse?.userData.height ?? 0;
     weight = widget.profileResponse?.userData.weight ?? 0;
@@ -132,22 +127,18 @@ class _UserProfileBodyState extends State<UserProfileBody> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        switch (state.status) {
-          case Status.loading:
-            const Center(
-              child: CircularProgressIndicator(),
-            );
-            break;
-          case Status.success:
-            profileResponse = state.response;
-
-            break;
-          case Status.failed:
-            const Center(
-              child: Text('Failed'),
-            );
-          default:
+        if (state.status == Status.loading) {
+          return const Center(child: CircularProgressIndicator());
         }
+
+        if (state.status == Status.failed) {
+          return const Center(child: Text('Failed'));
+        }
+
+        if (state.status == Status.success) {
+          profileResponse = state.response;
+        }
+
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -155,43 +146,42 @@ class _UserProfileBodyState extends State<UserProfileBody> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'About',
-                    style: TextStyle(color: YouAppColor.whiteColor),
-                  ),
+                  const Text('About',
+                      style: TextStyle(color: YouAppColor.whiteColor)),
                   TextButton(
-                    onPressed: () {
-                      if (widget.profileResponse != null) {
-                        context.read<ProfileBloc>().add(UpdateProfileEvent(
-                            updateProfileRequest: ProfileRequest(
-                                name: displayName,
-                                birthday: birthday,
-                                height: height,
-                                weight: weight,
-                                interests: widget
-                                    .profileResponse!.userData.interests)));
-                      } else {
-                        if (displayName.isEmpty &&
-                            birthday.isEmpty &&
-                            height == 0 &&
-                            weight == 0) {
-                          EasyLoading.showInfo("You have to fill data!");
-                        } else {
-                          context.read<ProfileBloc>().add(ProfileCreateEvent(
-                              profileRequest: ProfileRequest(
-                                  name: displayName,
-                                  birthday: birthday,
-                                  height: height,
-                                  weight: weight,
-                                  interests: widget
-                                      .profileResponse!.userData.interests)));
-                        }
-                      }
-                    },
-                    child: const Text(
+                    onPressed: isFormValid
+                        ? () {
+                            if (widget.profileResponse != null) {
+                              context.read<ProfileBloc>().add(
+                                  UpdateProfileEvent(
+                                      updateProfileRequest: ProfileRequest(
+                                          name: displayName,
+                                          birthday: birthday,
+                                          height: height,
+                                          weight: weight,
+                                          interests: widget.profileResponse!
+                                              .userData.interests)));
+                            } else {
+                              context.read<ProfileBloc>().add(
+                                  ProfileCreateEvent(
+                                      profileRequest: ProfileRequest(
+                                          name: displayName,
+                                          birthday: birthday,
+                                          height: height,
+                                          weight: weight,
+                                          interests: [])));
+                            }
+                          }
+                        : () {
+                            EasyLoading.showInfo("You have to fill data!");
+                          },
+                    child: Text(
                       'Save & Update',
                       style: TextStyle(
-                          color: YouAppColor.goldenColor, fontSize: 16),
+                          color: isFormValid
+                              ? YouAppColor.goldenColor
+                              : Colors.grey.withOpacity(0.2),
+                          fontSize: 16),
                     ),
                   ),
                 ],
@@ -207,19 +197,14 @@ class _UserProfileBodyState extends State<UserProfileBody> {
                         color: Colors.grey[800],
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 40,
-                        color: YouAppColor.goldColor,
-                      ),
+                      child: const Icon(Icons.add,
+                          size: 40, color: YouAppColor.goldColor),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text(
-                    'Add image',
-                    style:
-                        TextStyle(fontSize: 18, color: YouAppColor.whiteColor),
-                  ),
+                  const Text('Add image',
+                      style: TextStyle(
+                          fontSize: 18, color: YouAppColor.whiteColor)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -233,7 +218,6 @@ class _UserProfileBodyState extends State<UserProfileBody> {
                 hint: 'Select Gender',
                 context: context,
                 returnChangeValue: (changeValue) {
-                  logger.e(changeValue);
                   setState(() {
                     gender = changeValue;
                   });

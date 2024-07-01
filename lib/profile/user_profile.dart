@@ -95,10 +95,7 @@ class _UserProfileState extends State<UserProfile> {
 
           case Status.success:
             profileResponse = state.response;
-            logger.d(
-                "Interested response in userprofile is ${profileResponse?.userData.interests}");
-            logger.d(
-                "USer Profile response is ${profileResponse?.userData.name}");
+          
             buildUserProfileHome();
 
           default:
@@ -305,8 +302,8 @@ class _UserProfileState extends State<UserProfile> {
           ),
           const SizedBox(width: 10),
           if (profileResponse?.userData.birthday != null &&
-              profileResponse?.userData.height != null &&
-              profileResponse?.userData.weight != null) ...[
+              profileResponse?.userData.height != 0 &&
+              profileResponse?.userData.weight != 0) ...[
             buildUserData(profileResponse!.userData)
           ] else
             Text(
@@ -323,7 +320,7 @@ class _UserProfileState extends State<UserProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildInfoRow('Birthday', userData.birthday),
-        buildInfoRow('Horoscope', userData.horoscope),
+        buildInfoRow('Horoscope', userData.horoscope ),
         buildInfoRow('Height', '${userData.height} cm'),
         buildInfoRow('Weight', '${userData.weight} kg'),
       ],
