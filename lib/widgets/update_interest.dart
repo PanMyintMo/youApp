@@ -38,6 +38,9 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
       extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
         appTitle: '',
+        back: (BuildContext context) {
+          Navigator.pop(context);
+        },
         onPressed: () {},
         actions: [
           TextButton(
@@ -49,8 +52,6 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                       height: widget.profileResponse.userData.height,
                       weight: widget.profileResponse.userData.weight,
                       interests: _stringTagController.getTags!)));
-
-         
             },
             child: const Text(
               'Save',
@@ -62,7 +63,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
       body: GradientBackground(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 25, left: 10),
+            padding: const EdgeInsets.only(top: 25, left: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -201,7 +202,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                           if (value.trim().isEmpty) {
                             return;
                           }
-          
+
                           if (_stringTagController.getValidator != null) {
                             _stringTagController.setError =
                                 _stringTagController.getValidator!(value);

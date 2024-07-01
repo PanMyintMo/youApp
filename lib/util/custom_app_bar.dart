@@ -5,12 +5,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String appTitle;
   final VoidCallback? onPressed;
   final List<Widget>? actions;
+  final void Function(BuildContext)?
+      back; // Adjusted type to accept BuildContext
 
   const CustomAppBar({
     super.key,
     required this.appTitle,
     this.onPressed,
     this.actions,
+    this.back,
   });
 
   @override
@@ -24,21 +27,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         appTitle,
         style: const TextStyle(color: YouAppColor.whiteColor, fontSize: 16),
       ),
-      leading: const Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 14,
-              color: YouAppColor.whiteColor,
+      leading: GestureDetector(
+        onTap: () {
+          if (back != null) {
+            back!(context); // Call the back function with the context
+          } else {
+            Navigator.pop(context); // Fallback to Navigator.pop if back is null
+          }
+        },
+        child: const Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: 14,
+                color: YouAppColor.whiteColor,
+              ),
             ),
-          ),
-          Text(
-            'Back',
-            style: TextStyle(fontSize: 14, color: YouAppColor.whiteColor),
-          ),
-        ],
+            Text(
+              'Back',
+              style: TextStyle(fontSize: 14, color: YouAppColor.whiteColor),
+            ),
+          ],
+        ),
       ),
     );
   }

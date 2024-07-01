@@ -14,8 +14,8 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final AuthRepository repository = AuthRepository();
-  final SharePreferenceData sharePreferenceData = SharePreferenceData();
+  AuthRepository repository = AuthRepository();
+  SharePreferenceData sharePreferenceData = SharePreferenceData();
 
   LoginBloc() : super(const LoginState(status: Status.initial)) {
     on<LoginEvent>((event, emit) {});
@@ -31,15 +31,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             loginResponse.access_token!.isNotEmpty) {
           sharePreferenceData.setToken(loginResponse.access_token!);
 
-          // EasyLoading.showSuccess(loginResponse.message);
           emit(state.copyWith(
             status: Status.success,
             response: loginResponse,
           ));
-          // AppRouter.changeRoute<ProfileModule>(
-          //   ProfileRoutes.profile,
-          //   isReplaceAll: true,
-          // );
         } else if (loginResponse.message == AppString.incorrectPassword) {
           emit(state.copyWith(status: Status.success, response: loginResponse));
         }

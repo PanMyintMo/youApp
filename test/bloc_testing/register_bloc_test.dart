@@ -9,6 +9,7 @@ import 'package:youapp/model/authrequest_model.dart';
 import 'package:youapp/register/auth_bloc.dart';
 import 'package:youapp/response/authresponse.dart';
 import 'package:youapp/util/app_string.dart';
+
 import 'register_bloc_test.mocks.dart';
 
 @GenerateMocks([AuthRepository])

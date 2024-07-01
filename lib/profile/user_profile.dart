@@ -95,7 +95,7 @@ class _UserProfileState extends State<UserProfile> {
 
           case Status.success:
             profileResponse = state.response;
-          
+
             buildUserProfileHome();
 
           default:
@@ -110,6 +110,45 @@ class _UserProfileState extends State<UserProfile> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        leading: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Image.asset(
+                  "assets/images/back.png",
+                  color: Colors.white,
+                  width: 7,
+                  height: 16,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Text(
+                "Back",
+                style: TextStyle(
+                  color: YouAppColor.whiteColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        title: Center(
+          child: Text(
+            profileResponse?.userData.username ?? '',
+            style: const TextStyle(
+              color: YouAppColor.whiteColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
         actions: [
           PopupMenuButton<int>(
             itemBuilder: (BuildContext context) {
@@ -130,44 +169,6 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ],
         elevation: 0,
-        title: Row(
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Image.asset(
-                "assets/images/back.png",
-                color: Colors.white,
-                width: 7,
-                height: 16,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text(
-                "Back",
-                style: TextStyle(
-                  color: YouAppColor.whiteColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  profileResponse?.userData.username ?? '',
-                  style: const TextStyle(
-                    color: YouAppColor.whiteColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -234,6 +235,7 @@ class _UserProfileState extends State<UserProfile> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -262,7 +264,7 @@ class _UserProfileState extends State<UserProfile> {
                     profileResponse!.userData.interests.isEmpty
                 ? description
                 : profileResponse!.userData.interests.join(', '),
-            style: const TextStyle(color: Colors.grey, fontSize: 14),
+            style: const TextStyle(color: YouAppColor.whiteColor, fontSize: 14),
           ),
         ],
       ),
@@ -320,7 +322,7 @@ class _UserProfileState extends State<UserProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildInfoRow('Birthday', userData.birthday),
-        buildInfoRow('Horoscope', userData.horoscope ),
+        buildInfoRow('Horoscope', userData.horoscope),
         buildInfoRow('Height', '${userData.height} cm'),
         buildInfoRow('Weight', '${userData.weight} kg'),
       ],

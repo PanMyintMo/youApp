@@ -73,7 +73,7 @@ void main() {
     final gradient = boxDecoration.gradient as LinearGradient;
 
     expect(gradient.colors, [
-      YouAppColor.disableBtnColor,
+      YouAppColor.enableButtonColor,
       YouAppColor.disableBtnOneColor,
     ]);
   });
@@ -103,7 +103,7 @@ void main() {
     final gradient = boxDecoration.gradient as LinearGradient;
 
     expect(gradient.colors, [
-      YouAppColor.disableBtnColor.withOpacity(0.2),
+      YouAppColor.enableButtonColor.withOpacity(0.2),
       YouAppColor.disableBtnOneColor.withOpacity(0.3),
     ]);
   });

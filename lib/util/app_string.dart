@@ -12,4 +12,6 @@ class AppString {
 
   static const String userAlreadyRegisterMessage = "User already exists";
   static const String incorrectPassword = "Incorrect password";
+
+  static const String loginSuccess = "User has been logged in successfully";
 }
