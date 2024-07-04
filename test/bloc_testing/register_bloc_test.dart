@@ -1,4 +1,3 @@
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mockito/annotations.dart';
@@ -12,15 +11,13 @@ import 'package:youapp/util/app_string.dart';
 
 import 'register_bloc_test.mocks.dart';
 
-@GenerateMocks([AuthRepository])
+@GenerateMocks([
+  AuthRepository,
+])
 void main() {
   group('AuthBloc', () {
     late AuthBloc authBloc;
     late MockAuthRepository mockAuthRepository;
-
-    setUpAll(() {
-      EasyLoading.init();
-    });
 
     setUp(() {
       mockAuthRepository = MockAuthRepository();

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -14,28 +15,26 @@ part 'profile_event.dart';
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final ProfileRepository repository = ProfileRepository();
+  ProfileRepository repository = ProfileRepository();
 
   ProfileBloc() : super(const ProfileState(status: Status.initial)) {
     on<ProfileCreateEvent>((event, emit) async {
       try {
-        logger.e("Enter Here${event.profileRequest.toJson()}");
+        logger.d("Interest Req is ${event.profileRequest.toJson()}");
         emit(state.copyWith(status: Status.loading));
         final response = await repository.createProfile(event.profileRequest);
 
         if (response != null) {
           final profileResponse = ProfileResponse.fromJson(response);
-          EasyLoading.showSuccess(profileResponse.message);
-          AppRouter.changeRoute<ProfileModule>(ProfileRoutes.profile,
-              isReplace: false);
+          // EasyLoading.showSuccess(profileResponse.message);
+
+          logger.d("Profile Rp is $response");
           emit(state.copyWith(
               status: Status.success, response: profileResponse));
         } else {
-          EasyLoading.showSuccess("Creating Profile Fail");
           emit(state.copyWith(status: Status.failed));
         }
       } catch (e) {
-        logger.e("Create Profile error is $e");
         emit(state.copyWith(status: Status.failed));
       }
     });
@@ -45,15 +44,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: Status.loading));
         final response = await repository.getProfile();
 
-
         final profileResponse = ProfileResponse.fromJson(response);
 
-        logger.d(
-            "Profile Response is ${profileResponse.userData.email}");
-        EasyLoading.showSuccess(profileResponse.message);
+        logger.d("Get Profile is $profileResponse");
+
         emit(state.copyWith(status: Status.success, response: profileResponse));
       } catch (e) {
-        logger.e("Get profile error is $e");
+        //  logger.e("Get profile error is $e");
         emit(state.copyWith(status: Status.failed));
       }
     });
@@ -63,7 +60,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: Status.update));
         final response =
             await repository.updateProfile(event.updateProfileRequest.toJson());
-        logger.e(response);
 
         if (response != null) {
           final updateProfileResponse = ProfileResponse.fromJson(response);

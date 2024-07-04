@@ -25,12 +25,12 @@ class YouAppButton extends StatelessWidget {
             end: Alignment.bottomLeft,
             colors: isEnabled
                 ? [
-                    YouAppColor.enableButtonColor,
-                    YouAppColor.enableButtonColor,
+                    YouAppColor.disableBtnColor,
+                    YouAppColor.disableBtnOneColor,
                   ]
                 : [
-                    YouAppColor.enableButtonColor.withOpacity(0.2),
-                    YouAppColor.enableButtonColor.withOpacity(0.3),
+                    YouAppColor.disableBtnColor.withOpacity(0.2),
+                    YouAppColor.disableBtnOneColor.withOpacity(0.3),
                   ],
             stops: const [0.2488, 0.7849],
           ),

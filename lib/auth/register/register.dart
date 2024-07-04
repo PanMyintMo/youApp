@@ -3,7 +3,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:youapp/auth/authutil/youapprichtext.dart';
 import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/enum/status.dart';
+import 'package:youapp/module/auth/auth_module.dart';
 import 'package:youapp/util/app_color.dart';
+import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/app_string.dart';
 import 'package:youapp/util/validator.dart';
 import 'package:youapp/register/auth_bloc.dart';
@@ -12,7 +14,7 @@ import 'package:youapp/util/youapp_text_style.dart';
 import 'package:youapp/widgets/background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:youapp/response/authresponse.dart';
-import 'package:youapp/widgets/ptb_go_button.dart';
+import 'package:youapp/widgets/youapp_button.dart';
 import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:youapp/model/authrequest_model.dart';
 
@@ -108,12 +110,18 @@ class RegisterWidgetState extends State<RegisterWidget> {
           case Status.success:
             responseData = state.response;
 
-            responseData!.message.contains(AppString.userAlreadyRegisterMessage)
-                ? EasyLoading.showSuccess(responseData!.message.toString())
-                : EasyLoading.showToast(responseData!.message.toString());
+            if (responseData!.message
+                .contains(AppString.registerSuccessMessage)) {
+              EasyLoading.showToast(responseData!.message.toString());
+            } else {
+              EasyLoading.showToast(responseData!.message.toString());
+            }
 
-          // AppRouter.changeRoute<AuthModule>(AuthRoutes.login);
-
+            AppRouter.changeRoute<AuthModule>(
+              AuthRoutes.login,
+              isReplaceAll: true,
+            );
+            break;
           case Status.failed:
             const Center(
               child: Text('Register Failed'),
@@ -187,7 +195,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                   keyboardType: TextInputType.visiblePassword,
                   validator: (value) => validateConfirmPassword(
                       value, _confirmPasswordController.text),
-                  obscureText: _hidePwd,
+                  obscureText: _hideConfirmPassword,
                   suffixIcon: InkWell(
                     child: _hideConfirmPassword
                         ? const Icon(
@@ -223,7 +231,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 const SizedBox(height: 20),
                 const AuthRichText(
                   str1: 'Have an account?',
-                  actionText: 'Login Here',
+                  actionText: ' Login Here',
                   route: AuthRoutes.login,
                 ),
                 const SizedBox(height: 20),

@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import 'package:youapp/enum/status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:youapp/enum/status.dart';
 import 'package:youapp/module/profile/profile_module.dart';
 import 'package:youapp/profile/bloc/profile_bloc.dart';
 import 'package:youapp/profile/response/profile_response.dart';
@@ -14,8 +15,7 @@ import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/app_logger.dart';
 import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/app_string.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:youapp/widgets/background.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -66,20 +66,14 @@ class _UserProfileState extends State<UserProfile> {
       if (latestImageFile != null && latestImageFile.existsSync()) {
         setState(() {
           image = latestImageFile;
-          logger.d("Retrieved image: $image");
+          //logger.d("Retrieved image: $image");
         });
       } else {
-        logger.d("No image found.");
+        //  logger.d("No image found.");
       }
     } catch (e) {
       logger.d("Error retrieving image: $e");
     }
-  }
-
-  void _handleUpdateProfile() {
-    setState(() {
-      show = !show;
-    });
   }
 
   @override
@@ -95,8 +89,8 @@ class _UserProfileState extends State<UserProfile> {
 
           case Status.success:
             profileResponse = state.response;
-
             buildUserProfileHome();
+            EasyLoading.showToast(profileResponse!.message);
 
           default:
         }
@@ -107,9 +101,9 @@ class _UserProfileState extends State<UserProfile> {
 
   buildUserProfileHome() {
     return Scaffold(
-      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         leading: Row(
           children: [
             InkWell(
@@ -139,6 +133,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
           ],
         ),
+        elevation: 0,
         title: Center(
           child: Text(
             profileResponse?.userData.username ?? '',
@@ -155,7 +150,7 @@ class _UserProfileState extends State<UserProfile> {
               return [
                 const PopupMenuItem<int>(
                   value: 0,
-                  child: Text(AppString.updateProfile),
+                  child: Text('...'),
                 ),
               ];
             },
@@ -163,64 +158,64 @@ class _UserProfileState extends State<UserProfile> {
               FontAwesomeIcons.ellipsis,
               color: Colors.white,
             ),
-            onSelected: (int value) {
-              _handleUpdateProfile();
-            },
+            onSelected: (value) {},
           ),
         ],
-        elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                    color: YouAppColor.cardBackgroundColor,
-                    borderRadius: BorderRadius.circular(8),
-                    image: image == null
-                        ? null
-                        : DecorationImage(
-                            image: FileImage(File(image!.path)),
-                            fit: BoxFit.contain,
-                          )),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 16,
-                      bottom: 45,
-                      child: Text(
-                        profileResponse?.userData.username ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+      body: GradientBackground(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height / 8),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                      color: YouAppColor.cardBackgroundColor,
+                      borderRadius: BorderRadius.circular(8),
+                      image: image == null
+                          ? null
+                          : DecorationImage(
+                              image: FileImage(File(image!.path)),
+                              fit: BoxFit.contain,
+                            )),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 16,
+                        bottom: 45,
+                        child: Text(
+                          profileResponse?.userData.username ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      left: 16,
-                      bottom: 20,
-                      child: Text(
-                        profileResponse?.userData.email ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      Positioned(
+                        left: 16,
+                        bottom: 20,
+                        child: Text(
+                          profileResponse?.userData.email ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              createProfile(),
-              const SizedBox(height: 20),
-              buildInterest(
-                  AppString.interest, AppString.profileInterestDescription),
-            ],
+                const SizedBox(height: 20),
+                createProfile(),
+                const SizedBox(height: 20),
+                buildInterest(
+                    AppString.interest, AppString.profileInterestDescription),
+              ],
+            ),
           ),
         ),
       ),
@@ -235,7 +230,6 @@ class _UserProfileState extends State<UserProfile> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,7 +258,7 @@ class _UserProfileState extends State<UserProfile> {
                     profileResponse!.userData.interests.isEmpty
                 ? description
                 : profileResponse!.userData.interests.join(', '),
-            style: const TextStyle(color: YouAppColor.whiteColor, fontSize: 14),
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
           ),
         ],
       ),
@@ -294,9 +288,14 @@ class _UserProfileState extends State<UserProfile> {
               const SizedBox(height: 10),
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    show = !show;
-                  });
+                  if (title == "Interest") {
+                    AppRouter.changeRoute<ProfileModule>(
+                        ProfileRoutes.interest);
+                  } else {
+                    setState(() {
+                      show = !show;
+                    });
+                  }
                 },
                 icon: const Icon(Icons.edit, color: Colors.grey),
               ),

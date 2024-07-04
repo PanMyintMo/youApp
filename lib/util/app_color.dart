@@ -12,7 +12,7 @@ class YouAppColor {
   static const Color goldColor = Color(0xFFdbbb49);
   static const Color disableTextColor = Color(0xFf62CDCB);
 
-  static const Color enableButtonColor = Color(0xFF62CDCB);
+  static const Color disableBtnColor  = Color(0xFF62CDCB);
   static const Color disableBtnOneColor = Color(0xFF4599DB);
   static const Color profileBackgroundColor = Color(0xFF0E191F);
   static const Color goldenColor = Color(0xFF94783E);

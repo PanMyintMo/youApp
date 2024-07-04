@@ -3,7 +3,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:youapp/module/auth/auth_module.dart';
 import 'package:youapp/module/profile/profile_module.dart';
 import 'package:youapp/routes/youapp_routes.dart';
-import 'package:youapp/util/app_logger.dart';
 
 class AppRouter {
   static void _goToNextPage({
@@ -15,7 +14,7 @@ class AppRouter {
     if (isReplace) {
       Modular.to.pushReplacementNamed(routeName, arguments: args);
     } else if (isReplaceAll) {
-      logger.e(routeName);
+      //   logger.e(routeName);
       Modular.to.pushNamedAndRemoveUntil(
         routeName,
         (Route<dynamic> route) => false,
@@ -43,8 +42,8 @@ class AppRouter {
         tempRoute = MainRoutes.profile;
         break;
     }
-    logger.e(tempRoute);
-    logger.e("$tempRoute$routes");
+    // logger.e(tempRoute);
+    // logger.e("$tempRoute$routes");
 
     _goToNextPage(
       routeName: "$tempRoute$routes",

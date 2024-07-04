@@ -1,12 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:youapp/auth_repository/auth_repo.dart';
 import 'package:youapp/enum/status.dart';
-import 'package:youapp/login/login_bloc.dart';
+import 'package:youapp/auth_bloc/login_bloc.dart';
 import 'package:youapp/model/authrequest_model.dart';
-import 'package:youapp/response/authresponse.dart';
+import 'package:youapp/services/share_preference.dart';
+
 import 'login_bloc_test.mocks.dart';
 
+@GenerateMocks([AuthRepository, SharePreferenceData])
 void main() {
   group('LoginBloc', () {
     late LoginBloc loginBloc;

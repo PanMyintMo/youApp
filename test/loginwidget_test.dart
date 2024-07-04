@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:youapp/auth/login/login.dart';
-import 'package:youapp/login/login_bloc.dart';
+import 'package:youapp/auth_bloc/login_bloc.dart';
 import 'package:youapp/util/app_color.dart';
-import 'package:youapp/widgets/ptb_go_button.dart';
+import 'package:youapp/widgets/youapp_button.dart';
 
 class MockCallback extends Mock {
   void call();
@@ -113,7 +113,7 @@ void main() {
       final gradient = boxDecoration.gradient as LinearGradient;
 
       expect(gradient.colors, [
-        YouAppColor.enableButtonColor,
+        YouAppColor.disableBtnColor,
         YouAppColor.disableBtnOneColor,
       ]);
     });
@@ -141,7 +141,7 @@ void main() {
       final boxDecoration = container.decoration as BoxDecoration;
       final gradient = boxDecoration.gradient as LinearGradient;
       expect(gradient.colors, [
-        YouAppColor.enableButtonColor.withOpacity(0.2),
+        YouAppColor.disableBtnColor.withOpacity(0.2),
         YouAppColor.disableBtnOneColor.withOpacity(0.3),
       ]);
     });

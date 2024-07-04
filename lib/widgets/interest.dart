@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+import 'package:youapp/module/profile/profile_module.dart';
 import 'package:youapp/profile/bloc/profile_bloc.dart';
 import 'package:youapp/profile/request/profile_request.dart';
 import 'package:youapp/profile/response/profile_response.dart';
+import 'package:youapp/routes/profile/profile_routes.dart';
 import 'package:youapp/util/app_color.dart';
+import 'package:youapp/util/app_router.dart';
 import 'package:youapp/util/custom_app_bar.dart';
 import 'package:youapp/widgets/background.dart';
 
-class UpdateInterestWidget extends StatefulWidget {
+class InterestWidget extends StatefulWidget {
   final ProfileResponse profileResponse;
-  const UpdateInterestWidget({super.key, required this.profileResponse});
+
+  const InterestWidget({super.key, required this.profileResponse});
 
   @override
-  State<UpdateInterestWidget> createState() => _UpdateInterestWidgetState();
+  State<InterestWidget> createState() => _InterestWidgetState();
 }
 
-class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
+class _InterestWidgetState extends State<InterestWidget> {
   late double _distanceToField;
   final StringTagController _stringTagController = StringTagController();
 
@@ -32,6 +36,26 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
     super.dispose();
   }
 
+  void _saveTags() {
+    // ignore: prefer_collection_literals
+    final List<String> combinedTags = [
+      ...widget.profileResponse.userData.interests,
+      ...?_stringTagController.getTags,
+    ].toSet().toList();
+
+    context.read<ProfileBloc>().add(ProfileCreateEvent(
+      profileRequest: ProfileRequest(
+        name: widget.profileResponse.userData.name,
+        birthday: widget.profileResponse.userData.birthday,
+        height: widget.profileResponse.userData.height,
+        weight: widget.profileResponse.userData.weight,
+        interests: combinedTags,
+      ),
+    ));
+
+    AppRouter.changeRoute<ProfileModule>(ProfileRoutes.profile, isReplace: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,15 +68,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
         onPressed: () {},
         actions: [
           TextButton(
-            onPressed: () {
-              context.read<ProfileBloc>().add(ProfileCreateEvent(
-                  profileRequest: ProfileRequest(
-                      name: widget.profileResponse.userData.name,
-                      birthday: widget.profileResponse.userData.birthday,
-                      height: widget.profileResponse.userData.height,
-                      weight: widget.profileResponse.userData.weight,
-                      interests: _stringTagController.getTags!)));
-            },
+            onPressed: _saveTags,
             child: const Text(
               'Save',
               style: TextStyle(color: YouAppColor.goldColor),
@@ -95,8 +111,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                   },
                   inputFieldBuilder: (context, inputFieldValues) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
                         controller: inputFieldValues.textEditingController,
                         focusNode: inputFieldValues.focusNode,
@@ -186,8 +201,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                inputFieldValues
-                                                    .onTagDelete(tagData);
+                                                inputFieldValues.onTagDelete(tagData);
                                               },
                                             ),
                                           ],
@@ -204,8 +218,7 @@ class _UpdateInterestWidgetState extends State<UpdateInterestWidget> {
                           }
 
                           if (_stringTagController.getValidator != null) {
-                            _stringTagController.setError =
-                                _stringTagController.getValidator!(value);
+                            _stringTagController.setError = _stringTagController.getValidator!(value);
                             if (_stringTagController.getError == null) {
                               setState(() {
                                 _stringTagController.addTag(value);

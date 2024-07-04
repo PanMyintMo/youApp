@@ -6,7 +6,6 @@ class AppString {
   static const String profileInterestDescription =
       "Add in your interest to find a better match";
 
-  static const String updateProfile = "Update Profile";
   static const String registerSuccessMessage =
       "User has been created successfully";
 

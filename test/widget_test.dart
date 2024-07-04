@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:youapp/auth/login/login.dart';
-import 'package:youapp/login/login_bloc.dart';
+import 'package:youapp/auth_bloc/login_bloc.dart';
 import 'package:youapp/module/youapp_module.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
 import 'package:youapp/youapp.dart';

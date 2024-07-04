@@ -4,7 +4,7 @@ import 'package:youapp/util/app_color.dart';
 TextStyle authTextStyle = const TextStyle(color: YouAppColor.whiteColor);
 
 TextStyle authStyle = const TextStyle(
-  fontSize: 13,
+  fontSize: 16,
   color: YouAppColor.goldColor,
   decoration: TextDecoration.underline,
 );

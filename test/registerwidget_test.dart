@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:youapp/util/app_color.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
-import 'package:youapp/widgets/ptb_go_button.dart';
+import 'package:youapp/widgets/youapp_button.dart';
 
 class MockCallBack extends Mock {
   void call();
@@ -73,7 +73,7 @@ void main() {
     final gradient = boxDecoration.gradient as LinearGradient;
 
     expect(gradient.colors, [
-      YouAppColor.enableButtonColor,
+      YouAppColor.disableBtnColor,
       YouAppColor.disableBtnOneColor,
     ]);
   });
@@ -103,7 +103,7 @@ void main() {
     final gradient = boxDecoration.gradient as LinearGradient;
 
     expect(gradient.colors, [
-      YouAppColor.enableButtonColor.withOpacity(0.2),
+      YouAppColor.disableBtnOneColor.withOpacity(0.2),
       YouAppColor.disableBtnOneColor.withOpacity(0.3),
     ]);
   });

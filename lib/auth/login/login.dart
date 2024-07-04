@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:youapp/enum/status.dart';
-import 'package:youapp/login/login_bloc.dart';
-import 'package:youapp/module/profile/profile_module.dart';
-import 'package:youapp/response/authresponse.dart';
-import 'package:youapp/routes/auth/auth_routes.dart';
-import 'package:youapp/routes/profile/profile_routes.dart';
-import 'package:youapp/util/app_color.dart';
-
 import 'package:youapp/util/app_router.dart';
+import 'package:youapp/util/app_color.dart';
 import 'package:youapp/util/app_string.dart';
 import 'package:youapp/util/validator.dart';
+import 'package:youapp/auth_bloc/login_bloc.dart';
 import 'package:youapp/widgets/background.dart';
-import 'package:youapp/widgets/ptb_go_button.dart';
+import 'package:youapp/response/authresponse.dart';
+import 'package:youapp/routes/auth/auth_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youapp/widgets/youapp_button.dart';
 import 'package:youapp/model/authrequest_model.dart';
 import 'package:youapp/util/youapp_text_style.dart';
+import 'package:youapp/module/profile/profile_module.dart';
 import 'package:youapp/auth/authutil/youapprichtext.dart';
 import 'package:youapp/auth/authutil/youapptextbutton.dart';
 import 'package:youapp/util/youapp_dynamic_textfield.dart';
+import 'package:youapp/routes/profile/profile_routes.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -88,24 +87,29 @@ class LoginWidgetState extends State<LoginWidget> {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       switch (state.status) {
         case Status.loading:
-          return const Center(
+          const Center(
             child: CircularProgressIndicator(),
           );
+          break;
 
         case Status.success:
           loginResponse = state.response;
 
-          loginResponse!.message.contains(AppString.incorrectPassword)
-              ? EasyLoading.showToast(loginResponse!.message.toString())
-              : AppRouter.changeRoute<ProfileModule>(
-                  ProfileRoutes.profile,
-                  isReplaceAll: true,
-                );
+          if (loginResponse!.message.contains(AppString.incorrectPassword)) {
+            EasyLoading.showToast(loginResponse!.message.toString());
+          } else {
+            EasyLoading.showToast(loginResponse!.message.toString());
+          }
+
+          AppRouter.changeRoute<ProfileModule>(
+            ProfileRoutes.profile,
+            isReplaceAll: true,
+          );
 
           break;
 
         case Status.failed:
-          return const Center(
+          const Center(
             child: Text('Failed'),
           );
 
@@ -186,7 +190,7 @@ class LoginWidgetState extends State<LoginWidget> {
               const SizedBox(height: 20),
               const AuthRichText(
                 str1: 'No account?',
-                actionText: 'Register here',
+                actionText: ' Register here',
                 route: AuthRoutes.register,
               ),
               const SizedBox(height: 20),

@@ -1,6 +1,6 @@
 part of 'profile_bloc.dart';
 
-class ProfileState {
+class ProfileState extends Equatable{
   final Status status;
   final ProfileResponse? response;
 
@@ -10,4 +10,7 @@ class ProfileState {
     return ProfileState(
         status: status ?? this.status, response: response ?? this.response);
   }
+  
+  @override
+  List<Object?> get props => [status,response];
 }

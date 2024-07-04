@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:youapp/enum/status.dart';
 import 'package:youapp/extension/birth_extension.dart';
 import 'package:youapp/profile/bloc/profile_bloc.dart';
 import 'package:youapp/profile/request/profile_request.dart';
@@ -13,7 +12,6 @@ import 'package:youapp/profile/response/profile_response.dart';
 import 'package:youapp/util/app_date_field.dart';
 import 'package:youapp/util/app_drop_down_field.dart';
 import 'package:youapp/util/app_color.dart';
-import 'package:youapp/util/app_logger.dart';
 import 'package:youapp/util/app_sign.dart';
 import 'package:youapp/util/app_textfield.dart';
 
@@ -99,11 +97,11 @@ class _UserProfileBodyState extends State<UserProfileBody> {
   void saveImage(File? image) async {
     try {
       final String path = (await getApplicationDocumentsDirectory()).path;
-      final File localImage =
-          await File(image!.path).copy('$path/${image.path.split('/').last}');
-      logger.d('Save image under: $path/${image.path.split('/').last}');
+
+      await File(image!.path).copy('$path/${image.path.split('/').last}');
+      //  logger.d('Save image under: $path/${image.path.split('/').last}');
     } catch (e) {
-      logger.e("Error saving image $e");
+      //   logger.e("Error saving image $e");
     }
   }
 
@@ -125,20 +123,7 @@ class _UserProfileBodyState extends State<UserProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        if (state.status == Status.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.status == Status.failed) {
-          return const Center(child: Text('Failed'));
-        }
-
-        if (state.status == Status.success) {
-          profileResponse = state.response;
-        }
-
+  
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -245,7 +230,7 @@ class _UserProfileBodyState extends State<UserProfileBody> {
             ],
           ),
         );
-      },
-    );
+      }
+  //  );
   }
-}
+//}
